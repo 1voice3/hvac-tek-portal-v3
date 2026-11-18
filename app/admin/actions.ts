@@ -1,0 +1,6 @@
+'use server';
+import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
+export async function setMemberStatus(formData: FormData) { const {supabase}=await requireAdmin(); const id=String(formData.get('id')); const status=String(formData.get('status')); if(!['approved','pending','suspended','banned'].includes(status)) return; await supabase.from('profiles').update({status}).eq('id',id).neq('role','admin'); revalidatePath('/admin/members'); }
+export async function addApp(formData: FormData) { const {supabase}=await requireAdmin(); const name=String(formData.get('name')||'').trim(); const launch_url=String(formData.get('launch_url')||'').trim(); try { const u=new URL(launch_url); if(!['https:'].includes(u.protocol)) return; } catch { return; } await supabase.from('apps').insert({name,launch_url,description:String(formData.get('description')||''),category:String(formData.get('category')||'HVAC Tools'),published:true}); revalidatePath('/admin/apps'); revalidatePath('/dashboard'); }
+export async function setAccessMode(formData: FormData) { const {supabase}=await requireAdmin(); const mode=String(formData.get('mode')); if(!['all','individual'].includes(mode)) return; await supabase.from('portal_settings').update({access_mode:mode}).eq('id',1); revalidatePath('/admin'); revalidatePath('/dashboard'); }

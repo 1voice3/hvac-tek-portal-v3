@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import { login } from './actions';
+export default function Login({ searchParams }: {searchParams: Promise<{error?:string}>}) { return <main className="auth"><Link href="/" className="brand">HVAC Tek Portal</Link><section className="panel"><h1>Welcome back</h1><p>Sign in to your member account.</p><form action={login}><label>Email<input name="email" type="email" required autoComplete="email" /></label><label>Password<input name="password" type="password" required autoComplete="current-password" /></label><button className="button primary" type="submit">Sign in</button></form><p className="muted">Need access? <Link href="/register">Request membership</Link></p></section></main>; }

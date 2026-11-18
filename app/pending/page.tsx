@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import { supabaseServer } from '@/lib/supabase';
+export default async function Pending() { const supabase = await supabaseServer(); const {data:{user}} = await supabase.auth.getUser(); return <main className="auth"><section className="panel"><div className="status-dot"/><h1>Pending approval</h1><p>Your registration has been received. An administrator must approve your account before you can access the portal.</p>{user && <form action={async()=>{'use server'; const s=await supabaseServer(); await s.auth.signOut();}}><button className="button secondary">Sign out</button></form>}<p className="muted"><Link href="/">Return to home</Link></p></section></main>; }
